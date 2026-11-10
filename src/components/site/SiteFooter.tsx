@@ -30,7 +30,7 @@ export default function SiteFooter({ locale }: { locale: Locale }) {
             </p>
           </div>
 
-          <div className="col-6 col-lg-3">
+          <div className="col-sm-6 col-lg-3">
             <h2>{t('explore')}</h2>
             <ul className="list-unstyled d-grid gap-2">
               {mainNav.map((item) => (
@@ -44,7 +44,7 @@ export default function SiteFooter({ locale }: { locale: Locale }) {
             </ul>
           </div>
 
-          <div className="col-6 col-lg-4">
+          <div className="col-sm-6 col-lg-4">
             <h2>{t('contactUs')}</h2>
             <address className="d-grid gap-2">
               <span className="d-flex gap-2">

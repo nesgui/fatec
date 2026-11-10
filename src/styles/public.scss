@@ -170,9 +170,14 @@ h3 {
     font-weight: 500;
     white-space: nowrap;
     color: var(--ink);
-    &:hover,
     &.active {
       color: var(--brand);
+    }
+    // Survol réservé aux souris : au doigt, le lien resterait coloré après le tap.
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        color: var(--brand);
+      }
     }
     &.active {
       text-decoration: underline;
@@ -592,7 +597,12 @@ h3 {
   a {
     color: rgba(#fff, 0.85);
     text-decoration: none;
-    &:hover {
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        color: var(--gold);
+      }
+    }
+    &:active {
       color: var(--gold);
     }
   }
@@ -791,8 +801,9 @@ a .ph-arrow-up-right {
 // Vert WhatsApp officiel, assombri pour un contraste AA du texte blanc.
 .whatsapp-fab {
   position: fixed;
-  right: max(1rem, env(safe-area-inset-right));
-  bottom: max(1rem, env(safe-area-inset-bottom));
+  // Hors de la barre d'accueil de l'iPhone et de l'encoche en paysage (actif grâce à viewportFit: 'cover')
+  right: calc(1rem + env(safe-area-inset-right, 0px));
+  bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
   z-index: 1030;
   display: inline-flex;
   align-items: center;
@@ -810,14 +821,24 @@ a .ph-arrow-up-right {
     font-size: 1.6rem;
     line-height: 1;
   }
-  &:hover,
+  // Survol (souris uniquement) : au doigt, le bouton resterait soulevé après le tap.
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      background: #0e743d;
+      color: #fff;
+      transform: translateY(-2px);
+    }
+  }
   &:focus-visible {
     background: #0e743d;
     color: #fff;
-    transform: translateY(-2px);
   }
+  // Retour au contact du doigt (pointer-down), pas au relâchement
   &:active {
+    background: #0e743d;
+    color: #fff;
     transform: scale(0.97);
+    transition-duration: 100ms;
   }
   // Sur mobile : rond, icône seule, pour ne pas masquer le contenu.
   @media (max-width: 575.98px) {
@@ -845,4 +866,229 @@ a .ph-arrow-up-right {
   object-fit: cover;
   border-radius: $border-radius-lg;
   box-shadow: 0 10px 30px rgba($ink, 0.12);
+}
+
+// =====================================================================
+//  10. Mobile (skill mobile-native)
+//  Couche « plateforme » : toucher, zones sûres, cibles tactiles, mise en page téléphone.
+//  On teste les capacités (hover, pointer), jamais le modèle d'appareil.
+// =====================================================================
+
+// ---- Toucher -------------------------------------------------------------
+// Réponse immédiate au tap : pas d'attente du double-tap (zoom), le clic part tout de suite.
+a,
+button,
+[role='button'],
+.btn {
+  touch-action: manipulation;
+}
+
+// Un appui long sur un contrôle ne doit pas sélectionner son libellé ni ouvrir le menu « copier ».
+// Uniquement sur les contrôles : adresses, téléphones et e-mails du contenu restent copiables.
+.btn,
+.navbar-toggler,
+.nav-link,
+.lang-switch a,
+.whatsapp-fab {
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+// Boutons Bootstrap : leur :hover n'est pas filtré et reste « collé » après un tap.
+// Sur les écrans sans survol, l'état survolé reprend les couleurs de repos ; :active garde le retour visuel.
+@media (hover: none) {
+  html .btn {
+    --bs-btn-hover-color: var(--bs-btn-color);
+    --bs-btn-hover-bg: var(--bs-btn-bg);
+    --bs-btn-hover-border-color: var(--bs-btn-border-color);
+  }
+}
+.btn:active {
+  transition-duration: 100ms; // le doigt se pose : réponse plus rapide que le relâchement
+}
+
+// Champs de saisie (formulaires des étapes suivantes) : sous 16 px, iOS zoome sur la page et ne dézoome pas.
+input,
+textarea,
+select {
+  font-size: max(16px, 1rem);
+}
+
+// ---- Zones sûres (encoche, Dynamic Island, barre d'accueil) ------------------
+// Avec viewportFit: 'cover', la page passe sous l'encoche : on repousse le contenu, pas les fonds.
+.container {
+  padding-left: max(calc(var(--bs-gutter-x) * 0.5), env(safe-area-inset-left, 0px));
+  padding-right: max(calc(var(--bs-gutter-x) * 0.5), env(safe-area-inset-right, 0px));
+}
+.site-header {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+.site-footer {
+  padding-bottom: calc(2rem + env(safe-area-inset-bottom, 0px));
+}
+
+// ---- En-tête et menu (sous 992 px) ----------------------------------------------
+@media (max-width: 991.98px) {
+  .site-header {
+    --header-h: 68px;
+    .brand-logo {
+      height: 42px;
+    }
+    .brand-text strong {
+      font-size: 1.3rem;
+    }
+    // Bouton menu : cible de 44 × 44 px, sans le contour bleu de Bootstrap au tap
+    .navbar-toggler {
+      min-width: 44px;
+      min-height: 44px;
+      padding: 0.4rem 0.6rem;
+      border-color: rgba($ink, 0.2);
+      &:focus {
+        box-shadow: none;
+      }
+      &:focus-visible {
+        box-shadow: 0 0 0 3px var(--gold);
+      }
+    }
+    // Menu ouvert : liens pleine largeur, 48 px de haut, séparés par un filet
+    .navbar-collapse {
+      max-height: calc(100dvh - var(--header-h) - env(safe-area-inset-top, 0px));
+      overflow-y: auto;
+      overscroll-behavior: contain; // le défilement du menu n'entraîne pas la page derrière
+    }
+    .navbar-nav {
+      padding-top: 0.5rem;
+      .nav-item + .nav-item {
+        border-top: 1px solid rgba($ink, 0.08);
+      }
+      .nav-link {
+        display: flex;
+        align-items: center;
+        min-height: 48px;
+        font-size: 1.1rem;
+        &:active {
+          color: var(--brand);
+        }
+      }
+    }
+    // « Candidater » prend la place restante : gros bouton facile à atteindre au pouce
+    .navbar-collapse .btn-primary {
+      flex: 1;
+      min-height: 48px;
+      font-size: 1.05rem;
+    }
+  }
+}
+
+// Sélecteur de langue : 44 px de haut au doigt (30 px suffisent à la souris)
+@media (pointer: coarse) {
+  .lang-switch a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding-inline: 0.9rem;
+    font-size: 0.95rem;
+  }
+}
+
+// ---- Téléphones (sous 576 px) ------------------------------------------------
+@media (max-width: 575.98px) {
+  // Bandeau d'accueil : hauteur dictée par le contenu, pour voir les coordonnées sans faire défiler
+  .hero {
+    min-height: 0;
+    padding-block: 3rem 6rem;
+    h1 {
+      font-size: clamp(2rem, 9vw, 2.4rem);
+    }
+    // Le nom complet est déjà dans l'en-tête juste au-dessus : on ne le répète pas sur un petit écran
+    .eyebrow {
+      display: none;
+    }
+  }
+  // Boutons principaux empilés en pleine largeur : cibles larges, à portée du pouce
+  .hero-actions .btn,
+  .cta-band .btn {
+    width: 100%;
+  }
+  .cta-band .d-flex.flex-wrap {
+    flex-direction: column;
+  }
+
+  .times-bar .times-card {
+    padding: 1.25rem;
+  }
+
+  .feature-card {
+    padding: 1.5rem;
+  }
+  .page-hero h1 {
+    font-size: clamp(2rem, 9vw, 2.4rem);
+  }
+
+  // Fondateur : photo au-dessus du texte, alignée à gauche comme le reste
+  .founder {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+    .founder-photo {
+      width: 140px;
+      height: 140px;
+    }
+  }
+
+  // Pièces du dossier : le badge « obligatoire » passe sous le libellé au lieu de l'écraser
+  // Le libellé occupe la place à côté de l'icône ; seul le badge descend.
+  .doc-list li {
+    flex-wrap: wrap;
+    align-items: flex-start;
+    row-gap: 0.4rem;
+    i {
+      margin-top: 0.2rem;
+    }
+    > span:not(.badge-required) {
+      flex: 1 1 0;
+      min-width: 0;
+    }
+    .badge-required {
+      margin-left: calc(1.3rem + 0.75rem);
+    }
+  }
+
+  .confession li {
+    padding: 1rem 1rem 1rem 3.5rem;
+    &::before {
+      left: 0.9rem;
+      top: 1rem;
+      width: 30px;
+      height: 30px;
+    }
+  }
+
+  // Le bouton WhatsApp ne doit pas recouvrir la dernière ligne du pied de page
+  .site-footer {
+    padding-bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+// ---- Formations de l'accueil : carrousel natif sur téléphone -----------------------
+// Défilement horizontal du navigateur (scroll-snap) : sa physique vaut mieux qu'un geste codé à la main.
+// La carte suivante dépasse à droite pour montrer qu'on peut faire glisser.
+@media (max-width: 767.98px) {
+  .program-scroller {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    overscroll-behavior-x: contain; // le glissement ne déclenche pas le « retour » du navigateur
+    padding-bottom: 0.5rem;
+    scrollbar-width: none;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+    > * {
+      flex: 0 0 82%;
+      max-width: 22rem;
+      scroll-snap-align: start;
+    }
+  }
 }

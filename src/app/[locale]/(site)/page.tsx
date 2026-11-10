@@ -124,7 +124,8 @@ export default function HomePage({ params }: { params: Promise<{ locale: string 
             </Link>
           </div>
           <p data-reveal className="lead-muted mb-4">{programsT('modes')}</p>
-          <div className="row g-4" data-reveal="stagger">
+          {/* Sur téléphone : défilement horizontal (scroll-snap) au lieu de six cartes empilées */}
+          <div className="row g-4 program-scroller" data-reveal="stagger">
             {programs.map((p) => (
               <div className="col-md-6 col-xl-4" key={p.id}>
                 <Link href={{ pathname: '/formations', hash: p.id }} className="card-link">

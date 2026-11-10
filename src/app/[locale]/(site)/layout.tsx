@@ -24,8 +24,18 @@ export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
 }
 
-// Couleur de la barre du navigateur mobile, assortie au fond de l'en-tête
-export const viewport: Viewport = { themeColor: '#fdf8f3' };
+// Mobile (skill mobile-native) :
+// - themeColor : barre du navigateur assortie au fond de l'en-tête. Une seule valeur : le site n'a qu'un thème clair.
+// - colorScheme light : le mode sombre du téléphone ne repeint pas les contrôles natifs (barres de défilement, champs).
+// - viewportFit cover : la page passe sous l'encoche ; les env(safe-area-inset-*) du CSS repoussent le contenu.
+// - interactiveWidget : sur Android, le clavier réduit la page au lieu de la recouvrir (formulaires à venir).
+// Jamais de maximumScale / userScalable : le zoom reste possible (accessibilité).
+export const viewport: Viewport = {
+  themeColor: '#fdf8f3',
+  colorScheme: 'light',
+  viewportFit: 'cover',
+  interactiveWidget: 'resizes-content'
+};
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
