@@ -1,0 +1,848 @@
+// =====================================================================
+//  Thème du SITE PUBLIC : Bootstrap compilé avec l'identité de la FATEC (brochure officielle).
+//  Totalement indépendant du thème de l'admin (styles/admin.scss).
+// =====================================================================
+
+// ---- 1. Identité visuelle ------------------------------------------
+$brand: #7d2418; // bordeaux de la brochure : couleur principale (boutons, liens)
+$brand-dark: #561409;
+$logo-red: #b22222; // rouge du logo
+$gold: #b0660a; // ocre (« Onction » dans le cercle des valeurs) : accents
+$gold-text: #8f5208; // ocre foncé, lisible en petit texte sur fond clair
+$cream: #fdf8f3; // fond
+$sand: #fbe6d2; // pêche de la brochure : sections alternées
+$ink: #231d19; // texte
+
+$primary: $brand;
+$secondary: #5b534c;
+$warning: $gold;
+$body-bg: $cream;
+$body-color: $ink;
+$link-color: $brand;
+$link-hover-color: $brand-dark;
+
+$font-family-sans-serif: var(--font-body), system-ui, sans-serif;
+$headings-font-family: var(--font-heading), Georgia, serif;
+$headings-font-weight: 600;
+$font-size-base: 1.125rem; // 18 px : lisible pour tous les âges
+$line-height-base: 1.65;
+
+$border-radius: 0.375rem;
+$border-radius-lg: 0.5rem;
+$btn-padding-y: 0.75rem;
+$btn-padding-x: 1.5rem;
+$btn-font-weight: 600;
+$input-padding-y: 0.75rem;
+
+$enable-shadows: false;
+
+// Menu burger : ouverture plus courte et plus franche (Bootstrap : height .35s ease)
+$transition-collapse: height 0.25s cubic-bezier(0.23, 1, 0.32, 1);
+
+@import 'bootstrap/scss/bootstrap';
+
+// ---- 2. Base ------------------------------------------------------------
+:root {
+  --brand: #{$brand};
+  --brand-dark: #{$brand-dark};
+  --gold: #{$gold};
+  --gold-text: #{$gold-text};
+  --logo-red: #{$logo-red};
+  --sand: #{$sand};
+  --ink: #{$ink};
+  --header-h: 76px;
+
+  // Courbes de mouvement (cf. skill animate) : à réutiliser, ne pas en inventer d'autres
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+html {
+  scroll-padding-top: var(--header-h);
+  -webkit-tap-highlight-color: transparent; // pas de flash gris au tap (le focus reste visible)
+}
+
+// Retour visuel au clic sur les boutons
+.btn {
+  transition:
+    $btn-transition,
+    transform 160ms var(--ease-out);
+  &:active {
+    transform: scale(0.97);
+  }
+}
+
+h1,
+h2,
+h3 {
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+:focus-visible {
+  outline: 3px solid var(--gold);
+  outline-offset: 2px;
+}
+
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: -100px;
+  z-index: 2000;
+  padding: 0.5rem 1rem;
+  background: var(--ink);
+  color: #fff;
+  border-radius: 0.5rem;
+  &:focus {
+    top: 1rem;
+  }
+}
+
+.eyebrow {
+  display: block;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--gold-text);
+  margin-bottom: 0.5rem;
+}
+
+.section {
+  padding-block: clamp(3.5rem, 8vw, 6rem);
+}
+.section-alt {
+  background: var(--sand);
+}
+.section-title {
+  font-size: clamp(1.9rem, 4vw, 2.6rem);
+  margin-bottom: 0.75rem;
+}
+.lead-muted {
+  color: $secondary;
+  max-width: 40rem;
+}
+
+// ---- 3. En-tête -----------------------------------------------------
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 1030;
+  min-height: var(--header-h);
+  background: $cream;
+  border-bottom: 1px solid rgba($ink, 0.08);
+  transition: box-shadow 200ms ease;
+
+  &.is-scrolled {
+    box-shadow: 0 8px 24px -16px rgba($ink, 0.35);
+  }
+
+  .navbar-brand {
+    font-family: var(--font-heading), Georgia, serif;
+    font-weight: 700;
+    font-size: 1.35rem;
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .brand-logo {
+    height: 50px;
+    width: auto;
+  }
+  .brand-text {
+    line-height: 1.1;
+    strong {
+      display: block;
+      font-size: 1.5rem;
+      letter-spacing: 0.04em;
+      color: var(--brand);
+    }
+    small {
+      font-family: var(--font-body), sans-serif;
+      font-weight: 500;
+      font-size: 0.72rem;
+      color: $secondary;
+      max-width: 13rem;
+      white-space: normal;
+    }
+  }
+  .nav-link {
+    font-size: 1rem;
+    font-weight: 500;
+    white-space: nowrap;
+    color: var(--ink);
+    &:hover,
+    &.active {
+      color: var(--brand);
+    }
+    &.active {
+      text-decoration: underline;
+      text-decoration-color: var(--gold);
+      text-decoration-thickness: 2px;
+      text-underline-offset: 6px;
+    }
+  }
+  .btn {
+    padding: 0.55rem 1.1rem;
+    font-size: 1rem;
+    white-space: nowrap;
+  }
+}
+
+// Écrans 1200–1399 px : menu complet affiché, mais place limitée → espacements resserrés.
+@media (min-width: 1200px) and (max-width: 1399.98px) {
+  .site-header {
+    .navbar-brand {
+      font-size: 1.2rem;
+    }
+    .navbar-nav {
+      --bs-navbar-nav-link-padding-x: 0.4rem;
+    }
+    .navbar-nav .nav-link {
+      font-size: 0.95rem;
+    }
+  }
+}
+
+
+.lang-switch {
+  display: inline-flex;
+  border: 1px solid rgba($ink, 0.2);
+  border-radius: 0.25rem;
+  overflow: hidden;
+  a {
+    padding: 0.3rem 0.7rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    color: var(--ink);
+    &[aria-current='true'] {
+      background: var(--ink);
+      color: #fff;
+    }
+  }
+}
+
+// ---- 4. Bandeau d'accueil -------------------------------------------
+.hero {
+  position: relative;
+  color: #fff;
+  min-height: min(88vh, 760px);
+  min-height: min(88svh, 760px); // ne saute pas quand la barre d'adresse mobile bouge
+  display: flex;
+  align-items: center;
+  // Aplat bordeaux de la brochure. TODO : une vraie photo de la faculté le moment venu :
+  // background: linear-gradient(rgba($brand-dark, 0.8), rgba($brand-dark, 0.8)), url('/images/hero.jpg') center / cover;
+  background: $brand-dark;
+  overflow: hidden;
+
+  .hero-watermark {
+    position: absolute;
+    right: 6%;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 78%;
+    width: auto;
+    opacity: 0.14;
+    pointer-events: none;
+  }
+
+  // Espace en bas : la carte des coordonnées chevauche le bandeau de 3,5rem.
+  padding-block: 4rem 7rem;
+
+  h1 {
+    font-size: clamp(2.2rem, 5vw, 3.6rem);
+    line-height: 1.12;
+    max-width: 20ch;
+  }
+  .hero-text {
+    font-size: clamp(1.1rem, 2vw, 1.3rem);
+    max-width: 34rem;
+    opacity: 0.92;
+  }
+  .eyebrow {
+    color: #f3d9a6;
+    font-size: 1.1rem;
+  }
+  .btn-light {
+    color: var(--brand-dark);
+  }
+}
+
+// ---- 5. Bandeau horaires --------------------------------------------
+.times-bar {
+  position: relative;
+  z-index: 2;
+  margin-top: -3.5rem;
+
+  .times-card {
+    background: #fff;
+    border-radius: $border-radius-lg;
+    border: 1px solid rgba($ink, 0.12);
+    padding: 1.5rem 1.75rem;
+  }
+  .time-item {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+  .time-label {
+    font-size: 0.9rem;
+    color: $secondary;
+    margin: 0;
+  }
+  .time-value {
+    font-weight: 700;
+    margin: 0;
+  }
+  a.time-value {
+    text-decoration: none;
+  }
+}
+
+// ---- 6. Cartes --------------------------------------------------------
+.feature-card {
+  height: 100%;
+  background: #fff;
+  border-radius: $border-radius-lg;
+  padding: 2rem;
+  border: 1px solid rgba($ink, 0.12);
+
+  h3 {
+    font-size: 1.35rem;
+  }
+  p {
+    color: $secondary;
+    margin: 0;
+  }
+}
+
+// Coordonnées de la page Contact : liens sans soulignement (la couleur suffit)
+.contact-card a {
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.empty-state {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  padding: 1.5rem;
+  border: 1px solid rgba($ink, 0.12);
+  border-radius: $border-radius-lg;
+  color: $secondary;
+}
+
+.cta-band {
+  background: var(--brand-dark);
+  color: #fff;
+  border-radius: $border-radius-lg;
+  padding: clamp(2rem, 5vw, 3.5rem);
+  p {
+    color: rgba(#fff, 0.8);
+  }
+}
+
+// ---- 6b. Mission, valeurs, fondateur -----------------------------------
+.mission-text {
+  position: relative;
+  font-size: 1.2rem;
+  padding-left: calc(4px + 1.25rem);
+  // Filet doré en pseudo-élément (et non en bordure) pour pouvoir le « tracer »
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 4px;
+    background: var(--gold);
+    transform-origin: top;
+  }
+}
+.values-title {
+  font-size: 1.6rem;
+  color: var(--brand);
+}
+.value-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: #fff;
+  border-radius: $border-radius-lg;
+  padding: 1rem 1.25rem;
+  border-left: 6px solid var(--tone);
+  font-size: 1.1rem;
+  strong {
+    font-family: var(--font-heading), sans-serif;
+    font-weight: 600;
+    font-size: 1.3rem;
+    color: var(--tone-text, var(--tone));
+    margin-right: 0.25rem;
+  }
+}
+// Couleurs du cercle des valeurs de la brochure
+.value-erudition {
+  --tone: #{$brand};
+}
+.value-onction {
+  --tone: #{$gold};
+  --tone-text: #{$gold-text};
+}
+.value-efficacite {
+  --tone: #e39a77; // pêche soutenu
+  --tone-text: #9c4a2a;
+}
+
+.founder {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2rem 3rem;
+  .founder-photo {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 6px solid #fff;
+  }
+}
+
+// ---- 6c. Formations, admissions, confession de foi ----------------------
+.card-link {
+  display: block;
+  height: 100%;
+  color: inherit;
+  text-decoration: none;
+  .feature-card {
+    transition: border-color 0.15s ease;
+  }
+  h3 {
+    text-decoration: underline 1px transparent;
+    text-underline-offset: 4px;
+    transition: text-decoration-color 0.15s ease;
+  }
+  // Survol réservé aux souris : au doigt, l'état resterait « collé » après le tap.
+  @media (hover: hover) and (pointer: fine) {
+    &:hover .feature-card {
+      border-color: var(--brand);
+    }
+    &:hover h3 {
+      text-decoration-color: currentColor;
+    }
+  }
+}
+.program-card {
+  h3 {
+    font-size: 1.4rem;
+  }
+}
+.program-level {
+  display: block;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--gold-text);
+  margin-bottom: 0.15rem;
+}
+.program-spec-title {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--ink) !important;
+}
+.program-specs {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  li {
+    font-size: 0.9rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 0.25rem;
+    background: var(--sand);
+    color: var(--brand-dark);
+  }
+}
+.mode-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.75rem;
+  border-radius: 0.25rem;
+  border: 1px solid rgba($brand, 0.25);
+  background: #fff;
+  color: var(--brand);
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.steps .feature-card {
+  position: relative;
+}
+.step-number {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--brand);
+  color: #fff;
+  font-family: var(--font-heading), sans-serif;
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+}
+
+.doc-list,
+.check-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.6rem;
+  li {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: #fff;
+    border-radius: $border-radius;
+    padding: 0.75rem 1rem;
+  }
+  i {
+    flex: none;
+    font-size: 1.3rem;
+    color: var(--brand);
+  }
+}
+.check-list li {
+  background: transparent;
+  padding: 0.25rem 0;
+  align-items: flex-start;
+  i {
+    color: var(--gold);
+    margin-top: 0.2rem;
+  }
+}
+.badge-required {
+  margin-left: auto;
+  flex: none;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--brand);
+  background: rgba($brand, 0.08);
+  border-radius: 0.25rem;
+  padding: 0.2rem 0.6rem;
+}
+
+.confession {
+  counter-reset: art;
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 1rem;
+  max-width: 52rem;
+  li {
+    counter-increment: art;
+    position: relative;
+    padding: 1.1rem 1.25rem 1.1rem 4rem;
+    background: #fff;
+    border-radius: $border-radius;
+    border: 1px solid rgba($ink, 0.12);
+    &::before {
+      content: counter(art);
+      position: absolute;
+      left: 1.1rem;
+      top: 1.1rem;
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--sand);
+      color: var(--brand);
+      font-weight: 700;
+    }
+  }
+  cite {
+    font-style: normal;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--gold-text);
+  }
+}
+
+// ---- 7. Pages intérieures -------------------------------------------
+.page-hero {
+  background: var(--sand);
+  padding-block: clamp(3rem, 7vw, 5rem);
+  h1 {
+    font-size: clamp(2.2rem, 5vw, 3.2rem);
+  }
+}
+
+// ---- 8. Pied de page --------------------------------------------------
+.site-footer {
+  background: #3a0e07; // bordeaux très foncé, comme le bandeau de la brochure
+  color: rgba(#fff, 0.75);
+  padding-block: 4rem 2rem;
+  font-size: 1rem;
+
+  h2 {
+    font-size: 1.1rem;
+    color: #fff;
+    margin-bottom: 1rem;
+  }
+  a {
+    color: rgba(#fff, 0.85);
+    text-decoration: none;
+    &:hover {
+      color: var(--gold);
+    }
+  }
+  .footer-brand {
+    font-family: var(--font-heading), sans-serif;
+    font-size: 1.6rem;
+    color: #fff;
+    line-height: 1.15;
+    small {
+      font-family: var(--font-body), sans-serif;
+      font-size: 0.85rem;
+      color: rgba(#fff, 0.75);
+      margin-top: 0.25rem;
+    }
+  }
+  .footer-values {
+    color: #f3c9a4;
+    font-weight: 500;
+  }
+  address {
+    font-style: normal;
+  }
+  .social a {
+    font-size: 1.5rem;
+  }
+  .footer-bottom {
+    border-top: 1px solid rgba(#fff, 0.1);
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    font-size: 0.9rem;
+  }
+}
+
+// Mouvement réduit : on retire les déplacements, pas les changements de couleur.
+// (Bootstrap coupe déjà ses propres transitions, dont l'ouverture du menu.)
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto !important;
+  }
+  .btn:active {
+    transform: none;
+  }
+}
+
+// =====================================================================
+//  9. Motion design
+//  Vocabulaire : les titres se « composent » de haut en bas (comme une ligne imprimée),
+//  le reste entre en fondu avec une légère montée. Une seule courbe : var(--ease-out).
+//  Rien ne bloque : tout reste cliquable pendant les animations.
+// =====================================================================
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    translate: 0 8px;
+  }
+}
+@keyframes land {
+  from {
+    opacity: 0;
+    translate: 0 16px;
+  }
+}
+@keyframes type-in {
+  from {
+    clip-path: inset(-10% -10% 110% -10%);
+    translate: 0 0.15em;
+  }
+  to {
+    clip-path: inset(-10% -10% -10% -10%);
+  }
+}
+@keyframes drift-in {
+  from {
+    opacity: 0;
+    translate: 24px 0;
+  }
+}
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+}
+
+// ---- Entrée du bandeau d'accueil (une fois par visite) -----------------
+// La carte d'Afrique glisse en place, le titre se compose, le texte et les boutons
+// suivent, puis la carte des coordonnées vient se poser sur le bandeau.
+// Remplissage `backwards` : état de départ pendant le délai, aucun style laissé après.
+.hero {
+  .hero-watermark {
+    animation: drift-in 900ms var(--ease-out) backwards;
+  }
+  .eyebrow {
+    animation: fade 350ms ease-out backwards;
+  }
+  h1 {
+    animation: type-in 600ms var(--ease-out) 40ms backwards;
+  }
+  .hero-text {
+    animation: rise 420ms var(--ease-out) 200ms backwards;
+  }
+  .hero-actions {
+    animation: rise 420ms var(--ease-out) 280ms backwards;
+  }
+}
+.times-bar .times-card {
+  animation: land 500ms var(--ease-out) 340ms backwards;
+}
+
+// ---- En-tête des pages intérieures : même geste, plus court ------------
+.page-hero {
+  h1 {
+    animation: type-in 480ms var(--ease-out) backwards;
+  }
+  .eyebrow,
+  .lead-muted {
+    animation: fade 350ms ease-out 120ms backwards;
+  }
+}
+
+// ---- Apparitions au défilement ----------------------------------------
+// Gérées par RevealObserver.tsx (API Web Animations), pour ne modifier aucun attribut
+// du DOM pendant l'hydratation. Un geste par type de contenu, 280 à 550 ms.
+
+// ---- Micro-interactions ----------------------------------------------
+// Menu (écran large) : le soulignement doré glisse depuis la gauche au survol
+// et repart vers la droite quand la souris s'en va.
+@media (min-width: 992px) {
+  .site-header .navbar-nav .nav-link {
+    position: relative;
+    &.active {
+      text-decoration: none;
+    }
+    &::after {
+      content: '';
+      position: absolute;
+      left: var(--bs-navbar-nav-link-padding-x);
+      right: var(--bs-navbar-nav-link-padding-x);
+      bottom: 0.3rem;
+      height: 2px;
+      background: var(--gold);
+      transform: scaleX(0);
+      transform-origin: right;
+      transition: transform 250ms var(--ease-out);
+    }
+    &.active::after {
+      transform: scaleX(1);
+    }
+  }
+}
+@media (min-width: 992px) and (hover: hover) and (pointer: fine) {
+  .site-header .navbar-nav .nav-link:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+}
+
+// Flèches des liens : elles avancent vers leur destination
+a .ph-arrow-right,
+a .ph-arrow-up-right {
+  display: inline-block;
+  transition: translate 200ms var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  a:hover .ph-arrow-right {
+    translate: 3px 0;
+  }
+  a:hover .ph-arrow-up-right {
+    translate: 2px -2px;
+  }
+}
+
+// ---- Mouvement réduit : des fondus, aucun déplacement ------------------
+@media (prefers-reduced-motion: reduce) {
+  .hero .hero-watermark,
+  .hero .eyebrow,
+  .hero h1,
+  .hero .hero-text,
+  .hero .hero-actions,
+  .times-bar .times-card,
+  .page-hero h1,
+  .page-hero .eyebrow,
+  .page-hero .lead-muted {
+    animation: fade 400ms ease-out backwards;
+  }
+  .site-header .navbar-nav .nav-link::after {
+    transition: none;
+  }
+  a:hover .ph-arrow-right,
+  a:hover .ph-arrow-up-right {
+    translate: none;
+  }
+}
+
+// ---- Bouton flottant WhatsApp ---------------------------------------
+// Vert WhatsApp officiel, assombri pour un contraste AA du texte blanc.
+.whatsapp-fab {
+  position: fixed;
+  right: max(1rem, env(safe-area-inset-right));
+  bottom: max(1rem, env(safe-area-inset-bottom));
+  z-index: 1030;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 3.25rem;
+  padding: 0.75rem 1.1rem;
+  border-radius: 999px;
+  background: #128c4a;
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: 0 6px 20px rgba($ink, 0.25);
+  transition: transform 0.2s var(--ease-out), background-color 0.2s var(--ease-out);
+  i {
+    font-size: 1.6rem;
+    line-height: 1;
+  }
+  &:hover,
+  &:focus-visible {
+    background: #0e743d;
+    color: #fff;
+    transform: translateY(-2px);
+  }
+  &:active {
+    transform: scale(0.97);
+  }
+  // Sur mobile : rond, icône seule, pour ne pas masquer le contenu.
+  @media (max-width: 575.98px) {
+    padding: 0.8rem;
+    .whatsapp-fab-label {
+      display: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+    &:hover,
+    &:focus-visible,
+    &:active {
+      transform: none;
+    }
+  }
+}
+
+// ---- Photo du campus ------------------------------------------------
+.campus-photo {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 442 / 146;
+  object-fit: cover;
+  border-radius: $border-radius-lg;
+  box-shadow: 0 10px 30px rgba($ink, 0.12);
+}

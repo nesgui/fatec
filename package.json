@@ -9,9 +9,17 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@hookform/resolvers": "^7.0.5",
+    "bootstrap": "^5.3.8",
     "next": "16.4.5",
+    "next-intl": "^4.14.9",
     "react": "19.3.0",
-    "react-dom": "19.3.0"
+    "react-bootstrap": "^2.10.10",
+    "react-dom": "19.3.0",
+    "react-hook-form": "^7.91.0",
+    "sass": "^1.108.1",
+    "simplebar-react": "^3.3.2",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@types/node": "^20",

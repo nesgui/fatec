@@ -1,0 +1,65 @@
+# Déploie le site public sur GitHub Pages à chaque push sur master.
+# GitHub Pages ne sert que des fichiers statiques : on construit un export statique (next build → out/).
+# Différences avec le site hébergé sur un serveur Node.js :
+#   - pas de proxy : la racine redirige vers /fr/ ou /en/ en JavaScript (scripts/static-extras.mjs) ;
+#   - URL identiques dans les deux langues (/en/la-faculte au lieu de /en/about) ;
+#   - l'espace d'administration n'est pas publié (il nécessite un serveur et une authentification).
+name: Déploiement GitHub Pages
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Retirer ce qui exige un serveur (proxy, administration)
+        run: |
+          rm -f src/proxy.ts
+          rm -rf "src/app/[locale]/(admin)"
+
+      - id: pages
+        uses: actions/configure-pages@v5
+
+      - name: Export statique
+        env:
+          NEXT_PUBLIC_STATIC_EXPORT: '1'
+          # "/fatec" pour un site de projet (utilisateur.github.io/fatec), vide pour un domaine personnalisé
+          NEXT_PUBLIC_BASE_PATH: ${{ steps.pages.outputs.base_path }}
+        run: |
+          npx next build
+          node scripts/static-extras.mjs
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
